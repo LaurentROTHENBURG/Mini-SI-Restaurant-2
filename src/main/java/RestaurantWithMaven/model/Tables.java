@@ -9,12 +9,18 @@ import java.util.List;
 
 public class Tables {
     private int tables_id;
-    private String nom;
-    private int nbconvive;
+    private static String nom;
+    private static int nbconvive;
 
     //Constructeur
     public Tables(int tables_id, String nom, int nbconvive) throws SQLException {
         this.tables_id = tables_id;
+        this.nom = nom;
+        this.nbconvive = nbconvive;
+            }
+
+    public Tables(String nom,
+                  int nbconvive) throws SQLException {
         this.nom = nom;
         this.nbconvive = nbconvive;
     }
@@ -48,4 +54,14 @@ public class Tables {
 
         return tablesList;
     }
+
+    public static void addTables(Connection connection) throws SQLException {
+        Statement ordreSQL = connection.createStatement();
+
+        ordreSQL.execute("INSERT INTO tables (nom, nbconvive)" +
+                "VALUES ('" + nom + "','" + nbconvive + "')");
+
+        ordreSQL.close();
+    }
+
 }

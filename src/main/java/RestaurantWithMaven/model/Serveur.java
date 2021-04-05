@@ -10,8 +10,8 @@ import java.util.List;
 //Création de la class Serveur
 public class Serveur {
     private int serveur_id;
-    private String nom;
-    private String prenom;
+    private static String nom;
+    private static String prenom;
 
     //constructeur pour affichage de toString en ajoutant id
     public Serveur(int newServeur_id, String newNom, String newPrenom) {
@@ -53,5 +53,14 @@ public class Serveur {
         ordreSQL.close();
 
         return serveurList;
+    }
+
+    public static void addServeur(Connection connection) throws SQLException {
+        Statement ordreSQL = connection.createStatement();
+
+        ordreSQL.execute("INSERT INTO serveur (nom, prenom)" +
+                "VALUES ('" + nom + "','" + prenom + "')");
+
+        ordreSQL.close();
     }
 }

@@ -5,6 +5,7 @@ import RestaurantWithMaven.model.Plat;
 import RestaurantWithMaven.model.Serveur;
 import RestaurantWithMaven.model.Tables;
 
+import javax.sound.midi.Soundbank;
 import java.lang.invoke.SwitchPoint;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class restaurant {
 
     public static final String RESET = "\u001B[0m";
     public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
 
     public static void main(String[] args) throws SQLException {
         Scanner scan = new Scanner(System.in);
@@ -24,14 +26,21 @@ public class restaurant {
         String user = "postgres";
         String password = "postgres";
 
+
         //Construction du Menu du programme
         //Affiche les choix de saisie possibles
-        System.out.println("_____________________________");
-        System.out.println("  - SAISISSEZ VOTRE CHOIX -   ");
-        System.out.println("   1- Saisie de facture : ");
-        System.out.println("   2- CA par Plats      : ");
-        System.out.println("   3- CA par Tables     : ");
-        System.out.println("_____________________________");
+        System.out.println(GREEN + "______________________________" + RESET);
+        System.out.println(GREEN + "|  - SAISISSEZ VOTRE CHOIX -  |  " + RESET);
+        System.out.println(GREEN + "|_____________________________|" + RESET);
+        System.out.println(GREEN + "|   1- Saisie de facture  :   |" + RESET);
+        System.out.println(GREEN + "|   2- CA par Plats       :   |" + RESET);
+        System.out.println(GREEN + "|   3- CA par Tables      :   |" + RESET);
+        System.out.println(GREEN + "|                             |" + RESET);
+        System.out.println(GREEN + "|   4- Ajouter un Serveur :   |" + RESET);
+        System.out.println(GREEN + "|   5- Ajouter une Table  :   |" + RESET);
+        System.out.println(GREEN + "|   6- Ajouter un Plat    :   |" + RESET);
+        System.out.println(GREEN + "|_____________________________|" + RESET);
+
 
         //Gestion des choix - le choix renvoie à une fonction
         int choice = 0;
@@ -50,47 +59,131 @@ public class restaurant {
                 showBestTables(url, user, password);
                 break;
             }
+            case 4: {
+                insertionServeur(scan);
+                break;
+            }
+            case 5: {
+                insertionTables(scan);
+                break;
+            }
+            case 6: {
+                insertionPlat(scan);
+                break;
+            }
             default: {
                 System.out.println("Erreur de saisie");
             }
         }
     }
 
+    private static void insertionPlat(Scanner scan) throws SQLException {
+        String url = "jdbc:postgresql://localhost:5432/restaurant";
+        String user = "postgres";
+        String password = "postgres";
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        System.out.println(GREEN + " _____________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le Nom du Plat :  |" + RESET);
+        System.out.println(GREEN + "|_____________________________|" + RESET);
+        scan.nextLine();
+        String nom = scan.nextLine();
+
+        System.out.println(GREEN + " _______________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le prix unitaire  : |" + RESET);
+        System.out.println(GREEN + "|_______________________________|" + RESET);
+        double prix_unitaire = scan.nextDouble();
+
+        Plat newPlat;
+        newPlat = new Plat(nom,prix_unitaire);
+        Plat.addPlat(connection);
+
+    }
+
+    private static void insertionTables(Scanner scan) throws SQLException {
+        String url = "jdbc:postgresql://localhost:5432/restaurant";
+        String user = "postgres";
+        String password = "postgres";
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        System.out.println(GREEN + " __________________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le Nom de la tables  : |" + RESET);
+        System.out.println(GREEN + "|__________________________________|" + RESET);
+        scan.nextLine();
+        String nom = scan.nextLine();
+
+        System.out.println(GREEN + " ____________________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le nombre de Convives  : |" + RESET);
+        System.out.println(GREEN + "|____________________________________|" + RESET);
+        int nbconvive = scan.nextInt();
+
+        Tables newTables;
+        newTables = new Tables(nom,nbconvive);
+        Tables.addTables(connection);
+
+    }
+
+    private static void insertionServeur(Scanner scan) throws SQLException {
+
+
+        String url = "jdbc:postgresql://localhost:5432/restaurant";
+        String user = "postgres";
+        String password = "postgres";
+        Connection connection = DriverManager.getConnection(url, user, password);
+
+        System.out.println(GREEN + " ________________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le Nom du Serveur  : |" + RESET);
+        System.out.println(GREEN + "|________________________________|" + RESET);
+        scan.nextLine();
+        String nom = scan.nextLine();
+
+        System.out.println(GREEN + " ___________________________________" + RESET);
+        System.out.println(GREEN + "| Saisissez le Prenom du Serveur  : |" + RESET);
+        System.out.println(GREEN + "|___________________________________|" + RESET);
+        String prenom = scan.nextLine();
+
+        Serveur newServeur;
+        newServeur = new Serveur(nom, prenom);
+        Serveur.addServeur(connection);
+
+    }
+
     private static void enterInvoice(Scanner scan, String url, String user, String password) throws SQLException {
         //Affichage de la liste des serveurs
         //On commence par afficher un message
-        System.out.println("____________________________");
-        System.out.println("Voici la liste des serveurs : ");
-        System.out.println("____________________________");
+        System.out.println(GREEN + " ______________________________" + RESET);
+        System.out.println(GREEN + "|Voici la liste des serveurs : |" + RESET);
+        System.out.println(GREEN + "|______________________________|" + RESET);
 
         //Ensuite on appelle la fonction de la classe serveur
         Connection connection = DriverManager.getConnection(url, user, password);
         Serveur.getListeServeur(connection);
 
-        System.out.println(RED + "________________________________________________" + RESET);
-        System.out.println(RED + "Renseigner le numéro correspondant au serveur : " + RESET);
-        System.out.println(RED + "________________________________________________" + RESET);
+        System.out.println(RED + " __________________________________________________" + RESET);
+        System.out.println(RED + "| Renseigner le numéro correspondant au serveur : |" + RESET);
+        System.out.println(RED + "|_________________________________________________|" + RESET);
         int serveur_idx = scan.nextInt();
 
         //Affichage de la liste des tables
         //On commence par afficher un message
-        System.out.println("____________________________");
-        System.out.println("Voici la liste des tables : ");
-        System.out.println("____________________________");
+        System.out.println(GREEN + " ____________________________" + RESET);
+        System.out.println(GREEN + "| Voici la liste des tables :| " + RESET);
+        System.out.println(GREEN + "|____________________________|" + RESET);
 
         Tables.gestListeTables(connection);
 
-        System.out.println(RED + "________________________________________________" + RESET);
-        System.out.println(RED + "Renseigner le numéro correspondant à la table : " + RESET);
-        System.out.println(RED + "________________________________________________" + RESET);
+
+        System.out.println(RED + " _________________________________________________" + RESET);
+        System.out.println(RED + "| Renseigner le numéro correspondant à la table : |" + RESET);
+        System.out.println(RED + "|_________________________________________________|" + RESET);
         int tables_idx = scan.nextInt();
 
 
         //Affichage de la liste des plats
         //On commence par afficher un message
-        System.out.println("____________________________");
-        System.out.println("Voici la liste des plats : ");
-        System.out.println("____________________________");
+        System.out.println(GREEN + " ____________________________" + RESET);
+        System.out.println(GREEN + "| Voici la liste des plats : |" + RESET);
+        System.out.println(GREEN + "|____________________________|" + RESET);
         //puis la liste des plats
         Plat.gestListePlat(connection);
 
@@ -100,19 +193,19 @@ public class restaurant {
         char reponse = 'Y';
 
         while (reponse == 'Y') {
-            System.out.println(RED + "________________________________________________" + RESET);
-            System.out.println(RED + "Renseigner le numéro correspondant au plat : " + RESET);
-            System.out.println(RED + "________________________________________________" + RESET);
+            System.out.println(RED + " ______________________________________________" + RESET);
+            System.out.println(RED + "| Renseigner le numéro correspondant au plat : |" + RESET);
+            System.out.println(RED + "|______________________________________________|" + RESET);
 
             plat_idx = scan.nextInt();
 
-             //Enregistrement dans la table facture_plat du plat_idx pour gérer le multi plats par commandes
+            //Enregistrement dans la table facture_plat du plat_idx pour gérer le multi plats par commandes
             Facture newFacturePlat;
             newFacturePlat = new Facture(plat_idx);
             newFacturePlat.insertionFacturePlat(connection);
 
             //Autre saisie ?
-            System.out.println("Voulez-vous saisir autres plats ? (Y/N)");
+            System.out.println(GREEN + "Voulez-vous saisir autres plats ? (Y/N)" + RESET);
             scan.nextLine();
             reponse = scan.nextLine().charAt(0);
         }
@@ -185,4 +278,7 @@ public class restaurant {
             throwables.printStackTrace();
         }
     }
+
+
+
 }

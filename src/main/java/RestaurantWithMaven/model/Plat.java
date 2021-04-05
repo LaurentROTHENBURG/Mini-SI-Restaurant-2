@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Plat {
     int plat_id;
-    String nom;
-    double prix_unitaire;
+   private static String nom;
+    private static double prix_unitaire;
 
     //Constructeur
     public Plat(int plat_id, String nom, double prix_unitaire) throws SQLException {
@@ -18,6 +18,12 @@ public class Plat {
         this.nom = nom;
         this.prix_unitaire = prix_unitaire;
     }
+
+    public Plat(String nom, double prix_unitaire) throws SQLException {
+        this.nom = nom;
+        this.prix_unitaire = prix_unitaire;
+    }
+
 
     //Formatage de sortie de l'extraction
 
@@ -45,6 +51,14 @@ public class Plat {
         ordreSQL.close();
 
         return platList;
+    }
+    public static void addPlat(Connection connection) throws SQLException {
+        Statement ordreSQL = connection.createStatement();
+
+        ordreSQL.execute("INSERT INTO plat (nom, prix_unitaire)" +
+                "VALUES ('" + nom + "','" + prix_unitaire + "')");
+
+        ordreSQL.close();
     }
 }
 
